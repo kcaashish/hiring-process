@@ -8,7 +8,7 @@ class Candidate(models.Model):
         return self.first_name + " " + self.last_name
 
 
-class CandidateSkills(models.Model):
+class CandidateSkill(models.Model):
     candidate_id = models.ForeignKey(Candidate, on_delete=models.CASCADE)
     skills_name = models.CharField(max_length=100)
 
