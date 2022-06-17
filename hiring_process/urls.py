@@ -24,4 +24,5 @@ urlpatterns = [
     path('jobskills/', jv.JobSkillView.as_view()),
     path('candidates/', cv.CandidateView.as_view()),
     path('candidateskills/', cv.CandidateSkillView.as_view()),
+    path('bestcandidate/', cv.BestCandidateView.as_view()),
 ]
