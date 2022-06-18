@@ -1,4 +1,4 @@
-from rest_framework.response import Response
+from django.http import JsonResponse
 from rest_framework.views import APIView
 from candidates.models import Candidate, CandidateSkill
 from candidates.serializers import CandidateSerializer, CandidateSkillSerializer
@@ -12,15 +12,15 @@ class CandidateView(APIView):
         '''List all candidates'''
         candidates = Candidate.objects.all()
         serializer = CandidateSerializer(candidates, many=True)
-        return Response(serializer.data)
+        return JsonResponse(serializer.data, safe=False)
     
     def post(self, request):
         '''Create a new candidate'''
         serializer = CandidateSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=201)
-        return Response(serializer.errors, status=400)
+            return JsonResponse(serializer.data, status=201, safe=False)
+        return JsonResponse(serializer.errors, status=400, safe=False)
 
 
 class CandidateSkillView(APIView):
@@ -29,15 +29,15 @@ class CandidateSkillView(APIView):
         '''List all candidateskills'''
         candidateskills = CandidateSkill.objects.all()
         serializer = CandidateSkillSerializer(candidateskills, many=True)
-        return Response(serializer.data)
+        return JsonResponse(serializer.data, safe=False)
 
     def post(self, request):
         '''Create a new candidateskill'''
         serializer = CandidateSkillSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=201)
-        return Response(serializer.errors, status=400)
+            return JsonResponse(serializer.data, status=201, safe=False)
+        return JsonResponse(serializer.errors, status=400, safe=False)
 
 
 class BestCandidateView(APIView):
@@ -46,7 +46,7 @@ class BestCandidateView(APIView):
         '''Return the best candidate with the most matched skill for the job'''
         job = JobSerializer(data=request.data)
         if not job.is_valid():
-            return Response(job.errors, status=400)
+            return JsonResponse(job.errors, status=400, safe=False)
         job_skills = JobSkill.objects.filter(job_id__job_title=job.data['job_title']).values_list('skills_name', flat=True)
         candidates = Candidate.objects.all()
         best_candidate = None
@@ -59,4 +59,4 @@ class BestCandidateView(APIView):
                 best_match = overlaping_percentage
                 best_candidate = candidate
         serializer = CandidateSerializer(best_candidate)
-        return Response(serializer.data)
+        return JsonResponse(serializer.data, safe=False)
