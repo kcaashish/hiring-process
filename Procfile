@@ -1,0 +1,1 @@
+web: gunicorn hiring_process.wsgi
